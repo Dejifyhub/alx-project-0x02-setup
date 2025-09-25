@@ -1,9 +1,8 @@
+// pages/home.tsx
 import React, { useState } from "react";
 import Header from "@/components/layout/Header";
 import Card from "@/components/common/Card";
-import PostModal from "@/components/common/Postmodal";
-
-
+import PostModal from "@/components/common/PostModal";
 
 interface Post {
   title: string;
@@ -11,41 +10,45 @@ interface Post {
 }
 
 const Home: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>([
+    { title: "First Card", content: "This is the first card's content." },
+    { title: "Second Card", content: "Here’s some more information in a second card." },
+    { title: "Third Card", content: "You can add as many cards as you like!" },
+  ]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAddPost = (title: string, content: string) => {
-    setPosts((prev) => [...prev, { title, content }]);
+  const handleAddPost = (newPost: Post) => {
+    setPosts((prev) => [...prev, newPost]);
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
       <Header />
-      <main className="flex-grow p-6 bg-gray-100">
-        <div className="mb-4 flex justify-end">
+      <main className="max-w-6xl mx-auto p-4">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Welcome to the Home Page</h1>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
           >
-            Add Post
+            + New Post
           </button>
         </div>
 
-        {/* Posts */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post, index) => (
             <Card key={index} title={post.title} content={post.content} />
           ))}
         </div>
-      </main>
 
-      {/* Modal */}
-      <PostModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleAddPost}
-      />
-    </div>
+        <PostModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleAddPost}
+        />
+      </main>
+    </>
   );
 };
 
